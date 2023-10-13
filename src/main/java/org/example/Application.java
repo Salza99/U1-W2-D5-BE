@@ -2,6 +2,8 @@ package org.example;
 
 import entities.Enum.Generi;
 import entities.Enum.Periodicita;
+import entities.Exception.AuthorValidationException;
+import entities.Exception.InvalidIbsnException;
 import entities.Exception.YearValidationException;
 import entities.Libro;
 import entities.Pubblicazioni;
@@ -37,6 +39,7 @@ public class Application {
         Scanner input = new Scanner(System.in);
         boolean open = true;
         while (open) {
+            System.out.println("questa è la tua libreria: ");
             mostraLibreria(libreria);
             System.out.println("premi 0 per uscire, 1 per aggiungere un elemento, 2 per rimuovere un elemento (ibsn Code), ");
             System.out.println("3 per cercare un elemento");
@@ -57,15 +60,20 @@ public class Application {
                     System.out.println("inserisci un isbn, un anno o un autore per iniziare la ricerca");
                     String ricerca = input.nextLine();
                     System.err.println("questo è il risultato della tua ricerca");
-                    if (ricerca.matches("[-9]")) {
-                        if (Long.parseLong(ricerca) > 99999999) {
-                            cercaPublicazione(Long.parseLong(ricerca));
-                        } else if (Integer.parseInt(ricerca) < 2024) {
-                            cercaPublicazione(Integer.parseInt(ricerca));
+                    try {
+                        if (ricerca.matches("^[0-9]*$")) {
+                            if (Long.parseLong(ricerca) > 99999999) {
+                                cercaPublicazione(Long.parseLong(ricerca));
+                            } else if (Integer.parseInt(ricerca) < 2024) {
+                                cercaPublicazione(Integer.parseInt(ricerca));
+                            }
+                        }else{
+                            cercaPublicazione(ricerca.toLowerCase());
                         }
-                    }else{
-                        cercaPublicazione(ricerca.toLowerCase());
+                    }catch (Exception e) {
+
                     }
+
 
                 default: break;
             }
@@ -154,17 +162,40 @@ public class Application {
 
     }
     public static void cercaPublicazione(Long isbn){
+        try {
+            mostraLibreria(libreria.stream().filter(pubblicazioni -> pubblicazioni.getIsbn().equals(isbn)).toList());
+            if (libreria.stream().filter(pubblicazioni -> pubblicazioni.getIsbn().equals(isbn)).toList().isEmpty()) {
+                throw new InvalidIbsnException();
+            }
+        }catch(InvalidIbsnException e) {
+            System.out.println("Numero ibsn inesistente nella tua libreria");
+        }
 
-        mostraLibreria(libreria.stream().filter(pubblicazioni -> pubblicazioni.getIsbn().equals(isbn)).toList());
 
         System.out.println("---------------------------------");
     }
     public static void cercaPublicazione(Integer anno){
-        mostraLibreria(libreria.stream().filter(pubblicazioni -> pubblicazioni.getAnnoDiPubblicazione().equals(anno)).toList());
+        try {
+            mostraLibreria(libreria.stream().filter(pubblicazioni -> pubblicazioni.getAnnoDiPubblicazione().equals(anno)).toList());
+            if (libreria.stream().filter(pubblicazioni -> pubblicazioni.getAnnoDiPubblicazione().equals(anno)).toList().isEmpty()) {
+                throw new YearValidationException();
+            }
+        }catch (YearValidationException e) {
+            System.out.println("Nessun record datato " + anno);
+        }
+
         System.out.println("---------------------------------");
     }
     public static void cercaPublicazione(String autore){
-        mostraLibreria(libreria.stream().filter(pubblicazioni -> pubblicazioni.getClass().equals(Libro.class)).filter(pubblicazioni -> ((Libro) pubblicazioni).getAutore().toLowerCase().equals(autore)).toList());
+        try {
+            mostraLibreria(libreria.stream().filter(pubblicazioni -> pubblicazioni.getClass().equals(Libro.class)).filter(pubblicazioni -> ((Libro) pubblicazioni).getAutore().toLowerCase().equals(autore)).toList());
+            if (libreria.stream().filter(pubblicazioni -> pubblicazioni.getClass().equals(Libro.class)).filter(pubblicazioni -> ((Libro) pubblicazioni).getAutore().toLowerCase().equals(autore)).toList().isEmpty()) {
+                throw new AuthorValidationException();
+            }
+        }catch(AuthorValidationException e) {
+            System.out.println("Nessun record per autore " + autore);
+        }
+
         System.out.println("---------------------------------");
     }
 }
