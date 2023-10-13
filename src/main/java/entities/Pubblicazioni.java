@@ -4,13 +4,13 @@ import java.time.LocalDate;
 import java.util.Random;
 
 public abstract class Pubblicazioni {
-    private Long isbn;
+    private Integer isbn;
     private String titolo;
-    private LocalDate annoDiPubblicazione;
+    private Integer annoDiPubblicazione;
     private Integer numeroPagine;
 
-    public Pubblicazioni(String titolo, LocalDate annoDiPubblicazione, Integer numeroPagine) {
-        this.isbn = new Random().nextLong(100, 5000);
+    public Pubblicazioni(String titolo, Integer annoDiPubblicazione, Integer numeroPagine) {
+        this.isbn = new Random().nextInt(100, 5000);
         this.titolo = titolo;
         this.annoDiPubblicazione = annoDiPubblicazione;
         this.numeroPagine = numeroPagine;

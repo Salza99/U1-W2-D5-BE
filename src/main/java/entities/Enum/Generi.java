@@ -1,4 +1,4 @@
-package entities;
+package entities.Enum;
 
 public enum Generi {
     STORIA,
