@@ -15,7 +15,24 @@ import java.util.Scanner;
 public class Application {
     public static List<Pubblicazioni> libreria = new ArrayList<>();
     public static void main(String[] args) {
-        
+        // creo una piccola libreria
+        Libro storia = new Libro("Le grandi battaglie di Roma", 1997, 500, "Piero Angela", Generi.STORIA);
+        Libro letteratura = new Libro("Sussidiario Italiano", 1957, 1346, "Accademia della Crusca", Generi.LETTERATURA);
+        Libro horror = new Libro("Sono il Conte Draculaaaa", 2001, 245,"Aldo Baglio", Generi.HORROR);
+        Libro fantasy = new Libro("Il trono di Spade", 1996, 840, "George Raymond Richard Martin", Generi.FANTASY);
+        Libro biografia = new Libro("Elon Musk", 2023, 780, "Elon Musk", Generi.BIOGRAFIA);
+        Rivista settimanale = new Rivista("Focus", 1992, 76, Periodicita.SETTIMANALE);
+        Rivista mensile = new Rivista("Donna Moderna", 1988, 47, Periodicita.MENSILE);
+        Rivista semestrale = new Rivista("Stato e Mercato", 1976, 62, Periodicita.SEMESTRALE);
+        // aggiungo alla libreria
+        libreria.add(storia);
+        libreria.add(letteratura);
+        libreria.add(horror);
+        libreria.add(fantasy);
+        libreria.add(biografia);
+        libreria.add(semestrale);
+        libreria.add(settimanale);
+        libreria.add(mensile);
 
         Scanner input = new Scanner(System.in);
         boolean open = true;
@@ -55,7 +72,7 @@ public class Application {
             String titolo = input.nextLine();
             System.out.println("inserisci l'anno di pubblicazione");
             Integer anno = Integer.parseInt(input.nextLine());
-            if (anno > 2023 || anno < 1000) {
+            if (anno >= 2023 || anno < 1000) {
                 throw new YearValidationException();
             }
             System.out.println("inserisci il numero di pagine");
