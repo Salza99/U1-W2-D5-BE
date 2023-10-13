@@ -23,6 +23,10 @@ public abstract class Pubblicazioni {
         return isbn;
     }
 
+    public Integer getAnnoDiPubblicazione() {
+        return annoDiPubblicazione;
+    }
+
     //to String
     @Override
     public String toString() {

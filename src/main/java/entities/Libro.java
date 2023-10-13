@@ -14,6 +14,11 @@ public class Libro extends Pubblicazioni {
         this.genere = genere;
     }
 
+    public String getAutore() {
+        return autore;
+    }
+
+
     @Override
     public String toString() {
         String pubblicazioni = super.toString();

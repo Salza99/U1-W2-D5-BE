@@ -7,11 +7,10 @@ import entities.Libro;
 import entities.Pubblicazioni;
 import entities.Rivista;
 
+import java.security.Timestamp;
+import java.sql.Time;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class Application {
     public static List<Pubblicazioni> libreria = new ArrayList<>();
@@ -38,7 +37,7 @@ public class Application {
         Scanner input = new Scanner(System.in);
         boolean open = true;
         while (open) {
-            mostraLibreria();
+            mostraLibreria(libreria);
             System.out.println("premi 0 per uscire, 1 per aggiungere un elemento, 2 per rimuovere un elemento (ibsn Code), ");
             System.out.println("3 per cercare un elemento");
             String resp = input.nextLine();
@@ -56,7 +55,18 @@ public class Application {
                     break;
                 case "3":
                     System.out.println("inserisci un isbn, un anno o un autore per iniziare la ricerca");
-                    
+                    String ricerca = input.nextLine();
+                    System.err.println("questo è il risultato della tua ricerca");
+                    if (ricerca.matches("[-9]")) {
+                        if (Long.parseLong(ricerca) > 99999999) {
+                            cercaPublicazione(Long.parseLong(ricerca));
+                        } else if (Integer.parseInt(ricerca) < 2024) {
+                            cercaPublicazione(Integer.parseInt(ricerca));
+                        }
+                    }else{
+                        cercaPublicazione(ricerca.toLowerCase());
+                    }
+
                 default: break;
             }
         }
@@ -127,8 +137,8 @@ public class Application {
         }
 
     }
-    public static void mostraLibreria(){
-        libreria.forEach(System.out::println);
+    public static void mostraLibreria(List<Pubblicazioni> a){
+        a.forEach(System.out::println);
     }
     public static void rimuoviPubblicazione(){
         Scanner input = new Scanner(System.in);
@@ -145,11 +155,16 @@ public class Application {
     }
     public static void cercaPublicazione(Long isbn){
 
+        mostraLibreria(libreria.stream().filter(pubblicazioni -> pubblicazioni.getIsbn().equals(isbn)).toList());
+
+        System.out.println("---------------------------------");
     }
     public static void cercaPublicazione(Integer anno){
-
+        mostraLibreria(libreria.stream().filter(pubblicazioni -> pubblicazioni.getAnnoDiPubblicazione().equals(anno)).toList());
+        System.out.println("---------------------------------");
     }
     public static void cercaPublicazione(String autore){
-
+        mostraLibreria(libreria.stream().filter(pubblicazioni -> pubblicazioni.getClass().equals(Libro.class)).filter(pubblicazioni -> ((Libro) pubblicazioni).getAutore().toLowerCase().equals(autore)).toList());
+        System.out.println("---------------------------------");
     }
 }
